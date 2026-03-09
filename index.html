@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Focus Timer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --bg: #0b0b0f;
+            --text: #ffffff;
+            --accent: #6ee7ff;
+            --glass: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.1);
+            --btn-bg: linear-gradient(145deg, #ffffff, #d9d9d9);
+            --btn-text: #000000;
+            --btn-secondary: rgba(255, 255, 255, 0.1);
+            --btn-secondary-hover: rgba(255, 255, 255, 0.15);
+            --progress-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        .break-mode {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --accent: #10b981;
+            --glass: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.08);
+            --btn-bg: linear-gradient(145deg, #0f172a, #1e293b);
+            --btn-text: #ffffff;
+            --btn-secondary: rgba(0, 0, 0, 0.05);
+            --btn-secondary-hover: rgba(0, 0, 0, 0.1);
+            --progress-bg: rgba(0, 0, 0, 0.08);
+            background:
+                radial-gradient(circle at 30% 20%, #ffffff, transparent 40%),
+                radial-gradient(circle at 80% 80%, #e2e8f0, transparent 40%),
+                var(--bg) !important;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 20% 20%, #1a1a2e, transparent 40%),
+                radial-gradient(circle at 80% 80%, #0f172a, transparent 40%),
+                var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 420px;
+            padding: 48px 32px;
+            border-radius: 32px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        #status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        #status i {
+            font-size: 1.2rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: var(--progress-bg);
+            border-radius: 4px;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 1s linear, background 0.5s ease;
+        }
+
+        #timer {
+            font-size: clamp(4.5rem, 18vw, 7rem);
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 40px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        button {
+            border: none;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        #mainButton {
+            flex: 1;
+            padding: 18px 24px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--btn-text);
+            background: var(--btn-bg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        #mainButton i {
+            font-size: 1.3rem;
+        }
+
+        #mainButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        #resetButton {
+            padding: 0 20px;
+            background: var(--btn-secondary);
+            color: var(--text);
+            font-size: 1.4rem;
+        }
+
+        #resetButton:hover {
+            background: var(--btn-secondary-hover);
+        }
+
+        @media (max-width: 420px) {
+            .app {
+                padding: 40px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+        <div id="status"><i class="ph ph-brain"></i> <span id="statusText">Ready</span></div>
+
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div id="timer">50:00</div>
+
+        <div class="controls">
+            <button id="mainButton" onclick="toggleTimer()">
+                <i class="ph-fill ph-play"></i> <span>Start Session</span>
+            </button>
+            <button id="resetButton" onclick="resetTimer()" title="Reset Timer">
+                <i class="ph ph-arrow-counter-clockwise"></i>
+            </button>
+        </div>
+    </div>
+
+    <audio id="alertSound" src="universfield-new-notification-036-485897.mp3" preload="auto"></audio>
+
+    <script>
+        const WORK_TIME = 50 * 60;
+        const BREAK_TIME = 10 * 60;
+
+        // Application State
+        let state = {
+            timeLeft: WORK_TIME,
+            isWorkSession: true,
+            isRunning: false,
+            endTime: null // crucial for cross-reload persistence
+        };
+
+        let timerId = null;
+
+        const timerDisplay = document.getElementById("timer");
+        const statusText = document.getElementById("statusText");
+        const statusIcon = document.querySelector("#status i");
+        const mainButtonText = document.querySelector("#mainButton span");
+        const mainButtonIcon = document.querySelector("#mainButton i");
+        const progressBar = document.getElementById("progress-bar");
+        const alertSound = document.getElementById("alertSound");
+
+        // Initialize application
+        function init() {
+            const savedState = localStorage.getItem("focusTimerState");
+
+            if (savedState) {
+                state = JSON.parse(savedState);
+
+                // If it was running when the user left, calculate accurate remaining time
+                if (state.isRunning && state.endTime) {
+                    const now = Date.now();
+                    const remaining = Math.round((state.endTime - now) / 1000);
+
+                    if (remaining <= 0) {
+                        // Timer expired while away
+                        handleSwitch(true);
+                    } else {
+                        state.timeLeft = remaining;
+                        startInterval();
+                    }
+                }
+            }
+
+            updateUI();
+            updateDisplay();
+        }
+
+        function saveState() {
+            localStorage.setItem("focusTimerState", JSON.stringify(state));
+        }
+
+        function updateDisplay() {
+            const mins = Math.floor(Math.abs(state.timeLeft) / 60);
+            const secs = Math.abs(state.timeLeft) % 60;
+
+            const timeString = `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+            timerDisplay.textContent = timeString;
+
+            const modeName = state.isWorkSession ? "Work" : "Break";
+            document.title = state.isRunning ? `(${timeString}) ${modeName}` : "Focus Timer";
+
+            // Update Progress Bar
+            const totalTime = state.isWorkSession ? WORK_TIME : BREAK_TIME;
+            const percentage = (state.timeLeft / totalTime) * 100;
+            progressBar.style.width = `${Math.max(0, percentage)}%`;
+        }
+
+        function updateUI() {
+            // Update Theme
+            if (state.isWorkSession) {
+                document.body.classList.remove("break-mode");
+                statusText.textContent = state.isRunning ? "Deep Work" : "Ready to Focus";
+                statusIcon.className = "ph ph-brain";
+            } else {
+                document.body.classList.add("break-mode");
+                statusText.textContent = "Take a Break";
+                statusIcon.className = "ph ph-coffee";
+            }
+
+            // Update Button States
+            if (state.isRunning) {
+                mainButtonText.textContent = "Pause";
+                mainButtonIcon.className = "ph-fill ph-pause";
+            } else {
+                const isNewSession = state.timeLeft === (state.isWorkSession ? WORK_TIME : BREAK_TIME);
+                mainButtonText.textContent = isNewSession ? "Start Session" : "Resume";
+                mainButtonIcon.className = "ph-fill ph-play";
+            }
+        }
+
+        function toggleTimer() {
+            if (state.isRunning) {
+                // Pause
+                clearInterval(timerId);
+                state.isRunning = false;
+                state.endTime = null;
+            } else {
+                // Start / Resume
+                state.isRunning = true;
+                state.endTime = Date.now() + (state.timeLeft * 1000);
+                startInterval();
+            }
+
+            updateUI();
+            updateDisplay();
+            saveState();
+        }
+
+        function startInterval() {
+            clearInterval(timerId);
+            timerId = setInterval(() => {
+                const now = Date.now();
+                state.timeLeft = Math.round((state.endTime - now) / 1000);
+
+                if (state.timeLeft <= 0) {
+                    handleSwitch();
+                } else {
+                    updateDisplay();
+                    saveState();
+                }
+            }, 1000);
+        }
+
+        function handleSwitch(silent = false) {
+            clearInterval(timerId);
+
+            if (!silent) {
+                alertSound.play().catch(() => { });
+            }
+
+            state.isWorkSession = !state.isWorkSession;
+            state.timeLeft = state.isWorkSession ? WORK_TIME : BREAK_TIME;
+            state.isRunning = false;
+            state.endTime = null;
+
+            updateUI();
+            updateDisplay();
+            saveState();
+        }
+
+        function resetTimer() {
+            clearInterval(timerId);
+            state.isWorkSession = true;
+            state.timeLeft = WORK_TIME;
+            state.isRunning = false;
+            state.endTime = null;
+
+            updateUI();
+            updateDisplay();
+            saveState();
+        }
+
+        // Boot up
+        init();
+    </script>
+</body>
+
+</html>
