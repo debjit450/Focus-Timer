@@ -5,37 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Focus Timer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
         :root {
-            --bg: #0b0b0f;
+            --bg: #050505;
             --text: #ffffff;
-            --accent: #6ee7ff;
-            --glass: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.1);
-            --btn-bg: linear-gradient(145deg, #ffffff, #d9d9d9);
+            --accent: #00f0ff;
+            --accent-glow: rgba(0, 240, 255, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-hover: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.08);
+            --btn-bg: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.75));
             --btn-text: #000000;
-            --btn-secondary: rgba(255, 255, 255, 0.1);
-            --btn-secondary-hover: rgba(255, 255, 255, 0.15);
-            --progress-bg: rgba(255, 255, 255, 0.1);
+            --btn-secondary: rgba(255, 255, 255, 0.05);
+            --btn-secondary-hover: rgba(255, 255, 255, 0.1);
+            --progress-bg: rgba(255, 255, 255, 0.05);
         }
 
         .break-mode {
-            --bg: #f8fafc;
+            --bg: #f5f7fa;
             --text: #0f172a;
             --accent: #10b981;
-            --glass: rgba(0, 0, 0, 0.03);
-            --border: rgba(0, 0, 0, 0.08);
-            --btn-bg: linear-gradient(145deg, #0f172a, #1e293b);
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --glass: rgba(0, 0, 0, 0.02);
+            --glass-hover: rgba(0, 0, 0, 0.05);
+            --border: rgba(0, 0, 0, 0.06);
+            --btn-bg: linear-gradient(135deg, #0f172a, #1e293b);
             --btn-text: #ffffff;
-            --btn-secondary: rgba(0, 0, 0, 0.05);
-            --btn-secondary-hover: rgba(0, 0, 0, 0.1);
-            --progress-bg: rgba(0, 0, 0, 0.08);
+            --btn-secondary: rgba(0, 0, 0, 0.04);
+            --btn-secondary-hover: rgba(0, 0, 0, 0.08);
+            --progress-bg: rgba(0, 0, 0, 0.06);
             background:
-                radial-gradient(circle at 30% 20%, #ffffff, transparent 40%),
-                radial-gradient(circle at 80% 80%, #e2e8f0, transparent 40%),
+                radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.12), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.12), transparent 50%),
                 var(--bg) !important;
         }
 
@@ -52,20 +56,21 @@
             align-items: center;
             justify-content: center;
             background:
-                radial-gradient(circle at 20% 20%, #1a1a2e, transparent 40%),
-                radial-gradient(circle at 80% 80%, #0f172a, transparent 40%),
+                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.15), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(123, 97, 255, 0.15), transparent 50%),
                 var(--bg);
             color: var(--text);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             padding: 20px;
-            transition: background 0.5s ease, color 0.5s ease;
+            transition: background 0.8s ease, color 0.8s ease;
+            overflow: hidden;
         }
 
         .app {
             width: 100%;
-            max-width: 420px;
-            padding: 48px 32px;
-            border-radius: 32px;
+            max-width: 440px;
+            padding: 48px 40px;
+            border-radius: 40px;
             background: var(--glass);
             border: 1px solid var(--border);
             backdrop-filter: blur(40px);
@@ -75,111 +80,160 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            transition: all 0.5s ease;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         #status {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-size: 0.85rem;
             letter-spacing: 0.25em;
             text-transform: uppercase;
-            opacity: 0.8;
             margin-bottom: 24px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--accent);
+            text-shadow: 0 0 16px var(--accent-glow);
+            font-family: 'Outfit', sans-serif;
         }
 
         #status i {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
 
         .progress-container {
             width: 100%;
-            height: 4px;
+            height: 6px;
             background: var(--progress-bg);
-            border-radius: 4px;
-            margin-bottom: 32px;
+            border-radius: 8px;
+            margin-bottom: 36px;
             overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
         }
 
         #progress-bar {
             height: 100%;
             width: 100%;
             background: var(--accent);
-            border-radius: 4px;
+            border-radius: 8px;
             transition: width 1s linear, background 0.5s ease;
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
         #timer {
-            font-size: clamp(4.5rem, 18vw, 7rem);
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(5rem, 21vw, 8rem);
             font-weight: 800;
             font-variant-numeric: tabular-nums;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.03em;
             line-height: 1;
+            margin-bottom: 20px;
+            text-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            transition: color 0.5s ease;
+        }
+
+        .time-adds {
+            display: flex;
+            gap: 12px;
             margin-bottom: 40px;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .app:hover .time-adds {
+            opacity: 1;
+        }
+
+        .time-adds button {
+            background: var(--btn-secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .time-adds button:hover {
+            background: var(--btn-secondary-hover);
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
         .controls {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             width: 100%;
         }
 
         button {
             border: none;
-            border-radius: 20px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            outline: none;
         }
 
         button:active {
-            transform: scale(0.96);
+            transform: scale(0.96) !important;
         }
 
         #mainButton {
             flex: 1;
-            padding: 18px 24px;
+            padding: 20px 28px;
+            border-radius: 24px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--btn-text);
             background: var(--btn-bg);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #mainButton i {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
 
         #mainButton:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.6);
         }
 
         #resetButton {
-            padding: 0 20px;
+            padding: 0 24px;
+            border-radius: 24px;
             background: var(--btn-secondary);
+            border: 1px solid var(--border);
             color: var(--text);
-            font-size: 1.4rem;
+            font-size: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #resetButton:hover {
             background: var(--btn-secondary-hover);
+            transform: translateY(-3px) rotate(-15deg);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
-        @media (max-width: 420px) {
+        @media (max-width: 480px) {
             .app {
                 padding: 40px 24px;
+                border: none;
+                background: transparent;
+                box-shadow: none;
+                backdrop-filter: none;
             }
         }
     </style>
@@ -196,9 +250,15 @@
 
         <div id="timer">50:00</div>
 
+        <div class="time-adds">
+            <button onclick="addTime(5)">+5m</button>
+            <button onclick="addTime(10)">+10m</button>
+            <button onclick="addTime(15)">+15m</button>
+        </div>
+
         <div class="controls">
             <button id="mainButton" onclick="toggleTimer()">
-                <i class="ph-fill ph-play"></i> <span>Start Session</span>
+                <i class="ph-fill ph-play"></i> <span id="mainBtnText">Start Session</span>
             </button>
             <button id="resetButton" onclick="resetTimer()" title="Reset Timer">
                 <i class="ph ph-arrow-counter-clockwise"></i>
@@ -206,7 +266,10 @@
         </div>
     </div>
 
-    <audio id="alertSound" src="universfield-new-notification-036-485897.mp3" preload="auto"></audio>
+    <!-- Alert for transitioning FROM work TO break -->
+    <audio id="workToBreakSound" src="universfield-new-notification-036-485897.mp3" preload="auto"></audio>
+    <!-- Alert for transitioning FROM break TO work -->
+    <audio id="breakToWorkSound" src="universfield-new-notification-056-494256.mp3" preload="auto"></audio>
 
     <script>
         const WORK_TIME = 50 * 60;
@@ -215,9 +278,10 @@
         // Application State
         let state = {
             timeLeft: WORK_TIME,
+            totalTime: WORK_TIME,
             isWorkSession: true,
             isRunning: false,
-            endTime: null // crucial for cross-reload persistence
+            endTime: null 
         };
 
         let timerId = null;
@@ -225,25 +289,30 @@
         const timerDisplay = document.getElementById("timer");
         const statusText = document.getElementById("statusText");
         const statusIcon = document.querySelector("#status i");
-        const mainButtonText = document.querySelector("#mainButton span");
+        const mainButtonText = document.getElementById("mainBtnText");
         const mainButtonIcon = document.querySelector("#mainButton i");
         const progressBar = document.getElementById("progress-bar");
-        const alertSound = document.getElementById("alertSound");
+        
+        const workToBreakSound = document.getElementById("workToBreakSound");
+        const breakToWorkSound = document.getElementById("breakToWorkSound");
 
-        // Initialize application
         function init() {
-            const savedState = localStorage.getItem("focusTimerState");
+            const savedState = localStorage.getItem("focusTimerStatePremium");
 
             if (savedState) {
                 state = JSON.parse(savedState);
+                
+                // Polyfill for existing users migrating to premium
+                if (!state.totalTime) {
+                    state.totalTime = state.isWorkSession ? WORK_TIME : BREAK_TIME;
+                    state.totalTime = Math.max(state.totalTime, state.timeLeft);
+                }
 
-                // If it was running when the user left, calculate accurate remaining time
                 if (state.isRunning && state.endTime) {
                     const now = Date.now();
                     const remaining = Math.round((state.endTime - now) / 1000);
 
                     if (remaining <= 0) {
-                        // Timer expired while away
                         handleSwitch(true);
                     } else {
                         state.timeLeft = remaining;
@@ -257,7 +326,18 @@
         }
 
         function saveState() {
-            localStorage.setItem("focusTimerState", JSON.stringify(state));
+            localStorage.setItem("focusTimerStatePremium", JSON.stringify(state));
+        }
+
+        function addTime(mins) {
+            const secondsToAdd = mins * 60;
+            state.timeLeft += secondsToAdd;
+            state.totalTime += secondsToAdd;
+            if (state.isRunning && state.endTime) {
+                state.endTime += (secondsToAdd * 1000);
+            }
+            updateDisplay();
+            saveState();
         }
 
         function updateDisplay() {
@@ -271,13 +351,11 @@
             document.title = state.isRunning ? `(${timeString}) ${modeName}` : "Focus Timer";
 
             // Update Progress Bar
-            const totalTime = state.isWorkSession ? WORK_TIME : BREAK_TIME;
-            const percentage = (state.timeLeft / totalTime) * 100;
+            const percentage = (state.timeLeft / state.totalTime) * 100;
             progressBar.style.width = `${Math.max(0, percentage)}%`;
         }
 
         function updateUI() {
-            // Update Theme
             if (state.isWorkSession) {
                 document.body.classList.remove("break-mode");
                 statusText.textContent = state.isRunning ? "Deep Work" : "Ready to Focus";
@@ -288,12 +366,11 @@
                 statusIcon.className = "ph ph-coffee";
             }
 
-            // Update Button States
             if (state.isRunning) {
                 mainButtonText.textContent = "Pause";
                 mainButtonIcon.className = "ph-fill ph-pause";
             } else {
-                const isNewSession = state.timeLeft === (state.isWorkSession ? WORK_TIME : BREAK_TIME);
+                const isNewSession = state.timeLeft === state.totalTime;
                 mainButtonText.textContent = isNewSession ? "Start Session" : "Resume";
                 mainButtonIcon.className = "ph-fill ph-play";
             }
@@ -301,12 +378,10 @@
 
         function toggleTimer() {
             if (state.isRunning) {
-                // Pause
                 clearInterval(timerId);
                 state.isRunning = false;
                 state.endTime = null;
             } else {
-                // Start / Resume
                 state.isRunning = true;
                 state.endTime = Date.now() + (state.timeLeft * 1000);
                 startInterval();
@@ -336,11 +411,16 @@
             clearInterval(timerId);
 
             if (!silent) {
-                alertSound.play().catch(() => { });
+                if (state.isWorkSession) {
+                    workToBreakSound.play().catch(() => { });
+                } else {
+                    breakToWorkSound.play().catch(() => { });
+                }
             }
 
             state.isWorkSession = !state.isWorkSession;
             state.timeLeft = state.isWorkSession ? WORK_TIME : BREAK_TIME;
+            state.totalTime = state.timeLeft;
             state.isRunning = false;
             state.endTime = null;
 
@@ -353,6 +433,7 @@
             clearInterval(timerId);
             state.isWorkSession = true;
             state.timeLeft = WORK_TIME;
+            state.totalTime = WORK_TIME;
             state.isRunning = false;
             state.endTime = null;
 
@@ -361,7 +442,6 @@
             saveState();
         }
 
-        // Boot up
         init();
     </script>
 </body>
